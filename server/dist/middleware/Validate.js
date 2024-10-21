@@ -25,17 +25,18 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateUser = void 0;
 const yup = __importStar(require("yup"));
-// Define the validation schema
 const userSchema = yup.object().shape({
-    firstname: yup.string().required('First Name is required'),
-    lastname: yup.string().required('Last Name is required'),
-    email: yup.string().email('Invalid email').required('Email is required'),
-    phone: yup.string().length(10, 'Phone number must be exactly 10 digits').required('Phone is required'),
-    gender: yup.string().required('Gender is required'),
-    usertype: yup.string().required('User type is required'),
+    firstname: yup.string().required("First Name is required"),
+    lastname: yup.string().required("Last Name is required"),
+    email: yup.string().email("Invalid email").required("Email is required"),
+    phone: yup
+        .string()
+        .length(10, "Phone number must be exactly 10 digits")
+        .required("Phone is required"),
+    gender: yup.string().required("Gender is required"),
+    usertype: yup.string().required("User type is required"),
     hobbies: yup.array().of(yup.string()).optional(),
 });
-// Middleware to validate the request body
 const validateUser = async (req, res, next) => {
     try {
         await userSchema.validate(req.body);
@@ -43,7 +44,7 @@ const validateUser = async (req, res, next) => {
     }
     catch (err) {
         return res.status(400).json({
-            message: 'Validation error',
+            message: "Validation error",
             details: err.errors,
         });
     }

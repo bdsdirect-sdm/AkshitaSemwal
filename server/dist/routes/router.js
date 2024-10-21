@@ -12,10 +12,6 @@ userRoutes.get("/allagencies", usercontroller_1.getallagencies);
 userRoutes.post("/login", usercontroller_1.loginUser);
 userRoutes.get("/jobseekers", token_1.JWT, usercontroller_1.getJobSeekers);
 userRoutes.get("/agencydetails", token_1.JWT, usercontroller_1.getAgencyDetails);
-// Uncomment and implement the update route as needed
-// userRoutes.put(
-//   "/:id",
-//   upload.fields([{ name: "photopath" }, { name: "pdfpath" }]),
-//   updatetuser
-// );
+userRoutes.put("/:id", usercontroller_1.updateStatus);
+userRoutes.get("/getStatus/:id, ");
 exports.default = userRoutes;

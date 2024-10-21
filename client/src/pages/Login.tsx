@@ -30,9 +30,9 @@ const Login = () => {
       console.log("ID:::::", response.data.user.id);
 
       if (userType === "agency") {
-        navigate("/agency-details");
+        navigate("/agency");
       } else {
-        navigate("/job-seekers");
+        navigate("/job-seeker");
       }
 
       setLoginError(null);

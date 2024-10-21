@@ -2,8 +2,6 @@ import User from "../models/user.model";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
-import { transporter } from "../middleware/mailer";
 const JWT_SECRET = "123";
 import { sendMail } from "../config/mailConnection";
 import { welcomeEmail } from "../utils/welcomeEmail";
@@ -22,6 +20,7 @@ export interface userInterface {
   hobbies: string;
   agencyid?: number; 
   password?: string; 
+  status: "pending" | "accepted" | "declined"
 }
 
 export const createuser = async (req: any, res: any) => {
@@ -64,6 +63,7 @@ export const createuser = async (req: any, res: any) => {
       hobbies,
       photopath: photopath ? photopath[0].path : null,
       password: hashedPassword,
+      status: "pending"
   }
 
   if(usertype === "jobseeker") {
@@ -189,19 +189,13 @@ export const getallagencies = async (req: any, res: any) => {
 
 export const updateStatus = async (req: Request, res: any) => {
   const { id } = req.params; 
-  console.log("BODY:", req.body)
-  const { values } = req.body;
-  console.log("ID::::::::::", id)
+  const { status } = req.body;
 
   try {
-
-    const user = await User.update(
-      { status:values },
-      {
-        where: { id },
-        returning: true,
-      }
-    );
+    const user = await User.findByPk(id);
+    console.log("USERRRR", user)
+    user!.status = status;
+    await user?.save();
 
     return res.status(200).json({
       message: 'User status updated successfully',
@@ -213,4 +207,16 @@ export const updateStatus = async (req: Request, res: any) => {
     });
   }
 };
+
+// export const getStatus = async (req: Request, res: Response) => {
+//   const { id } = req.params;
+//   try {
+//     const user = await User.findByPk(id);
+//   } catch (error) {
+//     console.error('Error updating user status:', error);
+//     return res.status(500).json({
+//       message: 'An error occurred while updating user status'
+//     });
+//   }
+// }
 

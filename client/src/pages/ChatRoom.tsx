@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { socket } from '../socket'; 
 import { useParams } from 'react-router-dom';
-import Chats from '../components/Chats';
 
 interface Message {
     roomId: string | undefined;     

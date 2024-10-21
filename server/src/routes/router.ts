@@ -24,5 +24,6 @@ userRoutes.post("/login", loginUser);
 userRoutes.get("/jobseekers", JWT, getJobSeekers);
 userRoutes.get("/agencydetails", JWT, getAgencyDetails);
 userRoutes.put("/:id", updateStatus)
+userRoutes.get("/getStatus/:id, ")
 
 export default userRoutes;

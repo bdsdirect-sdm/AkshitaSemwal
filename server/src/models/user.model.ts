@@ -15,7 +15,7 @@ public agency!:string
 public hobbies!:string
 public agencyid!:number
 public password!:string
-public status!: "pending" | "accepted" | "denied"
+public status!: "pending" | "accepted" | "declined"
 }
 
 User.init(
@@ -78,7 +78,7 @@ User.init(
     },
     status:{
         type:DataTypes.ENUM,
-        values:["pending", "accepted", "denied"],
+        values:["pending", "accepted", "declined"],
         allowNull: true
     },
         },

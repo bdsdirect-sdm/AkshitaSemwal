@@ -7,8 +7,8 @@ import {
 } from "react-router-dom";
 import Signup from "./pages/Signupform";
 import Login from "./pages/Login";
-import AgencyDetails from "./pages/Agencydetails";
-import JobSeekers from "./pages/Jobseeker";
+import Agency from "./pages/Agency";
+import JobSeeker from "./pages/JobSeeker";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ChatRoom from "./pages/ChatRoom";
 
@@ -21,12 +21,12 @@ const App = () => {
         <Route path="/" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route
-          path="/job-seekers"
-          element={isLoggedIn ? <JobSeekers /> : <Navigate to="/login" />}
+          path="/job-seeker"
+          element={isLoggedIn ? <JobSeeker /> : <Navigate to="/login" />}
         />
         <Route
-          path="/agency-details"
-          element={isLoggedIn ? <AgencyDetails /> : <Navigate to="/login" />}
+          path="/agency"
+          element={isLoggedIn ? <Agency /> : <Navigate to="/login" />}
         />
 
         <Route path="*" element={<Navigate to="/login" />} />

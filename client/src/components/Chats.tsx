@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
+import axios from "axios"
 
 const Chats = ({socket, name, room}) => {
-    const [message, setMessage] = useState("");
-    const [messageList, setMessageList] = useState([]);
+    const [message, setMessage] = useState("");  //current message input by the user
+    const [messageList, setMessageList] = useState<Array<any>>([]); //list of messages exchanged in the chat
 
-    const sendMessage = async() => {
+    //sending msgs through socket
+    //in the send msg event itll emit the data you just sent to all users
+    const sendMessage = () => {
         if(message !== "") {
             const messageData = {
                 room: room,
@@ -12,28 +15,32 @@ const Chats = ({socket, name, room}) => {
                 message: message,
                 time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes()
             }
-            await socket.emit("sendMessage", messageData);
+            socket.emit("sendMessage", messageData);
         }
+        setMessage("")
     }
 
+    //fetching older msgs in the chat
     const getMessage = async () => {
-        const response = await axios.get("http://localhost:4000/getMessages")
-        console.log("RESPONSEEEEE",response);
+        const response = await axios.get(`http://localhost:4000/users/getMessages/${room}`)
+        // console.log("RESPONSEEEEE",response.data);
+        const messagesData = response.data;
+        // console.log(messagesData)
+        setMessageList(messagesData);
+    }
 
-    //     const messagesData = Array.isArray(response.data.messages) ? response.data.messages : [];
-    //     console.log(messagesData)
-    //     setMessageList(messagesData);
-    // }
-
-    useEffect( () => {
+    useEffect(() => {
         //whenever someone types a msg, they emit the send msg event
-        //in the send msg event itll emit the data you just sent to all users
-        socket.on("receiveMsg", (data) => {
+        socket.on("receiveMsg", (data: any) => {
             console.log("DATA", data)
-
-            
+            setMessageList((prev) =>([...prev,data]))
         })
-    }, [socket])
+        getMessage();
+
+        // return () => {
+        //     (socket.off("receiveMsg"))
+        // }
+    }, [])
 
   return (
     <>
@@ -41,9 +48,10 @@ const Chats = ({socket, name, room}) => {
             <p>Live Chat</p>
         </div>
         <div className='chat-body'>
-            {messageList.map((messageData) => {
-                return <p>{messageData.message}</p>
-            })}
+            {messageList.map((messageData, index) => (
+                <p key={index}>{messageData.author}: {messageData.message} {messageData.time}</p>
+            ))}
+
         </div>
         <div className='chat-footer'>
             <input type='text' placeholder='Type message...' value={message} onChange={(e) => setMessage(e.target.value)}/>
@@ -53,4 +61,4 @@ const Chats = ({socket, name, room}) => {
   )
 }
 
-export default Chats;
+export default Chats

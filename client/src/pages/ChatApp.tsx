@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import io from "socket.io-client"
+import { socket } from '../utils/setSocket';
 import Chats from '../components/Chats'
 
-export const socket = io("http://localhost:4000")
+
 
 const ChatApp = () => {
     const [name, setName] = useState("");

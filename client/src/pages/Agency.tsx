@@ -14,6 +14,7 @@ const JobSeekers: React.FC = () => {
   useEffect(() => {
     const fetchJobSeekers = async () => {
       const token = localStorage.getItem("authToken");
+      console.log("TOKEN::::::::::::::",token)
       try {
         const response = await axios.get(
           "http://localhost:4000/users/jobseekers",

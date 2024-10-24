@@ -41,16 +41,25 @@ const JobSeeker: React.FC = () => {
         );
         const agencyData = response.data;
         setAgency(agencyData);
-        setJobSeekerStatus(agencyData.status);
+       
 
-        // await axios.get(
-        //   `http://localhost:4000/users/getStatus/${userId}`,
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${token}`,
-        //     },
-        //   }
-        // );
+        console.log("USERRR::::::::", userId)
+
+        const status = async() => {
+          const s = await axios.get(
+              `http://localhost:4000/users/getStatus/${userId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            setJobSeekerStatus(s.data);
+            console.log("USERRR::::::::status", jobSeekerStatus)
+        }
+
+        status();
+
       } catch (err: any) {
         setError(
           err.response?.data?.message || "Error fetching agency details"
@@ -62,6 +71,8 @@ const JobSeeker: React.FC = () => {
 
     fetchAgencyDetails();
   }, []);
+
+  
 
   if (loading) return <div className="flex justify-center items-center h-screen text-lg text-gray-600">Loading...</div>;
   if (error) return <div className="flex justify-center items-center h-screen text-lg text-red-600">Error: {error}</div>;
@@ -77,7 +88,7 @@ const JobSeeker: React.FC = () => {
 
   return (
     <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4 text-center">Agency Details</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center">My Agency Details</h2>
       <div className="mb-4">
         <h5 className="text-lg font-semibold">
           {agency?.firstname} {agency?.lastname}
@@ -89,7 +100,7 @@ const JobSeeker: React.FC = () => {
           <strong>Phone:</strong> {agency?.phone}
         </p>
         <p className="text-gray-700">
-          <strong>Approval Status:</strong> {agency?.phone}
+          <strong>Approval Status:</strong> {jobSeekerStatus}
         </p>
       </div>
 

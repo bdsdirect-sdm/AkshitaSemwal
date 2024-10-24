@@ -121,7 +121,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       },
       JWT_SECRET
     );
-    console.log("TOJ+KENNNNN", token)
+    console.log("TOKENNNNN", token)
 
     res.status(200).json({
       user,
@@ -134,29 +134,39 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const getJobSeekers = async (req: any, res: any) => {
-  const userId = req.user.id;
-  const userType = req.user.usertype;
-  console.log(userId, "");
-
-  const user = await User.findByPk(userId);
-
-  if (!user || user.usertype !== "agency") {
-    return res
-      .status(403)
-      .send({ message: "Access denied. Only agencies can view job seekers." });
-  }
-
   try {
-    const jobSeekers = await User.findAll({ where: { agencyid: userId } });
+    const userId = req.user.id;
+    console.log("REQUEST:::::::", req.user)
+    const userType = req.user.usertype;
+    console.log(userId, "");
 
-    res.status(200).json({ jobSeekers });
+    const user = await User.findByPk(userId);
+
+    if (!user || user.usertype !== "agency") {
+      return res
+        .status(403)
+        .send({ message: "Access denied. Only agencies can view job seekers." });
+    }
+
+  
+    const jobSeekers = await User.findAll({ where: { agencyid: userId } });
+    console.log("JOB SEEKERS:::::", jobSeekers)
+    if(jobSeekers.length > 0) {
+      console.log("first")
+      res.status(200).json({ jobSeekers });
+    }
+    else {
+      console.log("firstSECOND")
+      res.status(200).json({ message: "No job seekers found" });
+    }
+    
   } catch (error) {
-    console.error("Error fetching job seekers:", error);
     res.status(500).send({ message: "Error fetching job seekers" });
   }
 };
 
 export const getAgencyDetails = async (req: any, res: any) => {
+  console.log("USER RESP:::", req.user)
   const userId = req.user.id;
   try {
     const jobSeeker: any = await User.findByPk(userId);
@@ -208,15 +218,19 @@ export const updateStatus = async (req: Request, res: any) => {
   }
 };
 
-// export const getStatus = async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   try {
-//     const user = await User.findByPk(id);
-//   } catch (error) {
-//     console.error('Error updating user status:', error);
-//     return res.status(500).json({
-//       message: 'An error occurred while updating user status'
-//     });
-//   }
-// }
+export const getStatus = async (req: Request, res: any) => {
+  const { id } = req.params;
+  console.log("ID:::::::::::", id)
+  try {
+    const user = await User.findByPk(id);
+    const status = user?.status;
+    console.log("STATUS::::::::", status)
+    return(res.status(200).json(status));
+  } catch (error) {
+    console.error('Error updating user status:', error);
+    return res.status(500).json({
+      message: 'An error occurred while updating user status'
+    });
+  }
+}
 

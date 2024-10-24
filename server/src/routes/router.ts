@@ -6,6 +6,7 @@ import {
   getJobSeekers,
   getAgencyDetails,
   updateStatus,
+  getStatus,
 } from "../controller/usercontroller";
 import { upload } from "../middleware/multer";
 import { JWT } from "../middleware/token";
@@ -21,9 +22,9 @@ userRoutes.post(
 
 userRoutes.get("/allagencies", getallagencies);
 userRoutes.post("/login", loginUser);
-userRoutes.get("/jobseekers", JWT, getJobSeekers);
+userRoutes.get("/jobseekers",JWT, getJobSeekers);
 userRoutes.get("/agencydetails", JWT, getAgencyDetails);
 userRoutes.put("/:id", updateStatus)
-userRoutes.get("/getStatus/:id, ")
+userRoutes.get("/getstatus/:id", getStatus)
 
 export default userRoutes;
